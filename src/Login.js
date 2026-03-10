@@ -50,6 +50,25 @@ function Login({ onLogin }) {
         >
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
+                <button
+          onClick={async () => {
+            try {
+              const res = await axios.post(`${API}/auth/register`, {
+                company_name: 'Empresa Test',
+                slug: 'empresa-test',
+                admin_email: 'admin@test.com',
+                password: '123456'
+              })
+              onLogin(res.data.token)
+            } catch (err) {
+              alert('Error al registrar')
+            }
+          }}
+          style={{ width: '100%', padding: 10, background: '#6af7c2', color: 'black', border: 'none', fontSize: 14, cursor: 'pointer', marginTop: 8 }}
+        >
+          Registrar empresa de prueba
+        </button>
+
       </div>
     </div>
   )
