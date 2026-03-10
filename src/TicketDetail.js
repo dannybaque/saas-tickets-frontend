@@ -25,6 +25,7 @@ function TicketDetail({ token, ticketId, onBack }) {
 
   useEffect(() => {
     fetchTicket()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId])
 
   const handleComment = async () => {

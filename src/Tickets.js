@@ -39,6 +39,7 @@ function Tickets({ token, onSelect }) {
   useEffect(() => {
     fetchTickets()
     fetchCategories()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleCreate = async () => {
