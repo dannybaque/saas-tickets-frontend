@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import Login from './Login'
+import Tickets from './Tickets'
+import TicketDetail from './TicketDetail'
 
 function App() {
+  const [token, setToken]         = useState(null)
+  const [selectedId, setSelectedId] = useState(null)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {!token && <Login onLogin={setToken} />}
+      {token && !selectedId && <Tickets token={token} onSelect={setSelectedId} />}
+      {token && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} />}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
