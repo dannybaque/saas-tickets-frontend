@@ -4,9 +4,10 @@ import axios from 'axios'
 const API = 'http://localhost:3000/api'
 
 function Tickets({ token, onSelect }) {
-  const [tickets, setTickets] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [title, setTitle]     = useState('')
+  const [tickets, setTickets]       = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading]       = useState(true)
+  const [title, setTitle]           = useState('')
   const [description, setDescription] = useState('')
   const [categoryId, setCategoryId]   = useState('')
   const [creating, setCreating]       = useState(false)
@@ -24,8 +25,19 @@ function Tickets({ token, onSelect }) {
     }
   }
 
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${API}/categories`, { headers })
+      setCategories(res.data)
+      if (res.data.length > 0) setCategoryId(res.data[0].id)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(() => {
     fetchTickets()
+    fetchCategories()
   }, [])
 
   const handleCreate = async () => {
@@ -76,12 +88,15 @@ function Tickets({ token, onSelect }) {
           onChange={e => setDescription(e.target.value)}
           style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80 }}
         />
-        <input
-          placeholder="Category ID"
+        <select
           value={categoryId}
           onChange={e => setCategoryId(e.target.value)}
           style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
-        />
+        >
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </select>
         <button
           onClick={handleCreate}
           disabled={creating}
@@ -95,9 +110,9 @@ function Tickets({ token, onSelect }) {
       {tickets.length === 0
         ? <p>No hay tickets aún.</p>
         : tickets.map(ticket => (
-            <div key={ticket.id}
-                onClick={() => onSelect(ticket.id)}
-                style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 12, cursor: 'pointer' }}>
+          <div key={ticket.id}
+            onClick={() => onSelect(ticket.id)}
+            style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 12, cursor: 'pointer' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <strong>{ticket.title}</strong>
               <span style={{
@@ -112,7 +127,6 @@ function Tickets({ token, onSelect }) {
             <p style={{ color: '#999', fontSize: 11, marginTop: 4 }}>
               Prioridad: {ticket.priority} · Creado: {new Date(ticket.created_at).toLocaleDateString()}
             </p>
-            
           </div>
         ))
       }
