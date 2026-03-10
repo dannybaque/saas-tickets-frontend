@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API = 'http://localhost:3000/api'
+const API = 'https://saas-tickets-backend-production.up.railway.app/api'
+
 
 function TicketDetail({ token, ticketId, onBack }) {
   const [ticket, setTicket]   = useState(null)
