@@ -26,7 +26,7 @@ function Register({ onRegister, onSwitchToLogin}){
     }
 
     return(
-        <div style={{maxWidth:400, margin: '100px auto', fontFamily: 'san-serif'}}>
+        <div style={{maxWidth:400, margin: '100px auto', fontFamily: 'sans-serif'}}>
             <h2>Registrar Empresa</h2>
             <div style={{marginTop:20}}>
                 <input
