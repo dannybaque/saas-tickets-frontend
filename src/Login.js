@@ -5,7 +5,7 @@ import axios from 'axios'
 const API = 'https://saas-tickets-backend-production.up.railway.app/api'
 
 
-function Login({ onLogin }) {
+function Login({ onLogin,onSwitchToRegister }) {
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]       = useState(null)
@@ -50,25 +50,12 @@ function Login({ onLogin }) {
         >
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
-                <button
-          onClick={async () => {
-            try {
-              const res = await axios.post(`${API}/auth/register`, {
-                company_name: 'Empresa Test',
-                slug: 'empresa-test',
-                admin_email: 'admin@test.com',
-                password: '123456'
-              })
-              onLogin(res.data.token)
-            } catch (err) {
-              alert('Error al registrar')
-            }
-          }}
-          style={{ width: '100%', padding: 10, background: '#6af7c2', color: 'black', border: 'none', fontSize: 14, cursor: 'pointer', marginTop: 8 }}
-        >
-          Registrar empresa de prueba
+        <button
+            onClick={() => onSwitchToRegister()}
+            style={{ width: '100%', padding: 10, background: 'none', border: '1px solid #7c6af7', color: '#7c6af7', fontSize: 14, cursor: 'pointer', marginTop: 8 }}
+            >
+            ¿No tienes cuenta? Registrar empresa
         </button>
-
       </div>
     </div>
   )
