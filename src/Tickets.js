@@ -76,24 +76,24 @@ function Tickets({ token, onSelect }) {
       <h2>Tickets</h2>
 
       {/* Formulario nuevo ticket */}
-      <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginTop: 20, marginBottom: 30 }}>
+      <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginTop: 20, marginBottom: 30}}>
         <h4 style={{ marginBottom: 12 }}>Nuevo ticket</h4>
         <input
           placeholder="Título"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
         />
         <textarea
           placeholder="Descripción"
           value={description}
           onChange={e => setDescription(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80,}}
         />
         <select
           value={categoryId}
           onChange={e => setCategoryId(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
         >
           {categories.map(cat => (
             <option key={cat.id} value={cat.id}>{cat.name}</option>
