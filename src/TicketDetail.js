@@ -56,7 +56,7 @@ function TicketDetail({ token, ticketId, onBack }) {
     }
   }
 
-  const handleAssign = async () => {
+const handleAssign = async () => {
     try {
       await axios.put(`${API}/tickets/${ticketId}/assign`,
         {},
@@ -64,9 +64,12 @@ function TicketDetail({ token, ticketId, onBack }) {
       )
       fetchTicket()
     } catch (err) {
-      console.error(err)
+      if (err.response?.status === 403) {
+        alert('No tienes permisos para asignarte este ticket')
+      }
     }
   }
+
 
   const statusColor = {
     open:        '#6af7c2',
