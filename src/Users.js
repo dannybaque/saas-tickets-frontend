@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API = 'https://saas-tickets-backend-production.up.railway.app/api'
+const API = process.env.REACT_APP_API
 
 function Users({ token }) {
   const [users, setUsers]       = useState([])

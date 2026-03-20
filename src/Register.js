@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API = 'https://saas-tickets-backend-production.up.railway.app/api'
+const API = process.env.REACT_APP_API
+//'https://saas-tickets-backend-production.up.railway.app/api'
 
 function Register({ onRegister, onSwitchToLogin}){
     const [admin_email, setEmail]             = useState('')
