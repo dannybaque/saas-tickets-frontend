@@ -6,6 +6,7 @@ import TicketDetail from './TicketDetail'
 import Users from './Users'
 import Roles from './Roles'
 import Categories from './Categories'
+import Permissions from './Permissions'
 
 
 function App() {
@@ -41,12 +42,18 @@ function App() {
               style={{ padding: '6px 16px', background: view === 'categories' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
               Categorias
             </button>
+            <button
+              onClick={() => { setView('permissions'); setSelectedId(null) }}
+              style={{ padding: '6px 16px', background: view === 'permissions' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+              Permisos
+            </button>
           </div>
           {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} />}
           {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} />}
           {view === 'users' && <Users token={token} />}
           {view === 'roles' && <Roles token={token} />}
           {view === 'categories' && <Categories token={token} />}
+          {view === 'permissions' && <Permissions token={token} />}
         </div>
       )}
     </div>
