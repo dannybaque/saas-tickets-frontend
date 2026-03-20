@@ -69,6 +69,16 @@ function Users({ token }) {
     }
   }
 
+  const handleRoleChange = async (id, role_id) => {
+    try {
+      await axios.put(`${API}/users/${id}/role`, { role_id }, { headers })
+      fetchUsers()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+
   if (loading) return <p style={{ padding: 40 }}>Cargando Usuarios...</p>
 
   return (
@@ -111,25 +121,37 @@ function Users({ token }) {
           {creating ? 'Creando...' : 'Crear Usuario'}
         </button>
       </div>
-      {users.length === 0
-        ? <p>No hay usuarios aún.</p>
-        : users.map(user => (
-          <div key={user.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <strong>{user.name}</strong>
-              <button
-                onClick={() => handleStatus(user.id, user.is_active)}
-                style={{ padding: '4px 12px', background: user.is_active ? '#f76a8a' : '#6af7c2', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 }}>
-                {user.is_active ? 'Inactivar' : 'Activar'}
-              </button>
+        {users.length === 0
+          ? <p>No hay usuarios aún.</p>
+          : users.map(user => (
+            <div key={user.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <strong>{user.name}</strong>
+                <button
+                  onClick={() => handleStatus(user.id, user.is_active)}
+                  style={{ padding: '4px 12px', background: user.is_active ? '#f76a8a' : '#6af7c2', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 }}>
+                  {user.is_active ? 'Inactivar' : 'Activar'}
+                </button>
+              </div>
+              <p style={{ color: '#666', fontSize: 13, marginTop: 6 }}>{user.email}</p>
+              <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <select
+                  defaultValue={user.role_id || ''}
+                  onChange={e => handleRoleChange(user.id, e.target.value)}
+                  style={{ padding: '4px 8px', fontSize: 13, borderRadius: 4, border: '1px solid #ddd' }}>
+                  <option value=''>Sin rol</option>
+                  {roles.map(role => (
+                    <option key={role.id} value={role.id}>{role.name} — Nivel {role.level}</option>
+                  ))}
+                </select>
+                <span style={{ fontSize: 11, color: '#999' }}>Rol actual</span>
+              </div>
+              <p style={{ color: '#999', fontSize: 11, marginTop: 4 }}>
+                Creado: {new Date(user.created_at).toLocaleDateString()}
+              </p>
             </div>
-            <p style={{ color: '#666', fontSize: 13, marginTop: 6 }}>{user.email}</p>
-            <p style={{ color: '#999', fontSize: 11, marginTop: 4 }}>
-              Creado: {new Date(user.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        ))
-      }
+          ))
+        }
     </div>
   )
 }
