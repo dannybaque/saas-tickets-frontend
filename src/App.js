@@ -14,11 +14,29 @@ function App() {
   const [selectedId, setSelectedId]     = useState(null)
   const [showRegister, setShowRegister] = useState(false)
   const [view, setView]                 = useState('tickets')
+  const [userPermissions, setUserPermissions] = useState([])
+
+  const handleLogin = async (token) => {
+  setToken(token)
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const res = await fetch(`${process.env.REACT_APP_API}/permissions`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const perms = await res.json()
+      const userPerms = perms
+        .filter(p => p.level === payload.level && p.allowed)
+        .map(p => p.action)
+      setUserPermissions(userPerms)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <div>
-      {!token && !showRegister && <Login onLogin={setToken} onSwitchToRegister={() => setShowRegister(true)} />}
-      {!token && showRegister && <Register onRegister={setToken} onSwitchToLogin={() => setShowRegister(false)} />}
+      {!token && !showRegister && <Login onLogin={handleLogin} onSwitchToRegister={() => setShowRegister(true)} />}
+      {!token && showRegister && <Register onRegister={handleLogin} onSwitchToLogin={() => setShowRegister(false)} />}
       {token && (
         <div>
           <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', gap: 12 }}>
@@ -49,7 +67,7 @@ function App() {
             </button>
           </div>
           {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} />}
-          {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} />}
+          {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} permissions={userPermissions} />}
           {view === 'users' && <Users token={token} />}
           {view === 'roles' && <Roles token={token} />}
           {view === 'categories' && <Categories token={token} />}

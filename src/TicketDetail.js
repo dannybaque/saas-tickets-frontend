@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API = process.env.REACT_APP_API
 
-function TicketDetail({ token, ticketId, onBack }) {
+function TicketDetail({ token, ticketId, onBack, permissions }) {
   const [ticket, setTicket]   = useState(null)
   const [loading, setLoading] = useState(true)
   const [comment, setComment] = useState('')
@@ -81,6 +81,9 @@ const handleAssign = async () => {
   if (loading) return <p style={{ padding: 40 }}>Cargando...</p>
   if (!ticket) return <p style={{ padding: 40 }}>Ticket no encontrado</p>
 
+
+
+
   return (
     <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'sans-serif', padding: '0 20px' }}>
 
@@ -103,19 +106,19 @@ const handleAssign = async () => {
 
       {/* Acciones */}
       <div style={{ display: 'flex', gap: 8, marginTop: 20, flexWrap: 'wrap' }}>
-        {!ticket.assigned_to && (
+        {!ticket.assigned_to && permissions.includes('assign_ticket') && (
           <button onClick={handleAssign}
             style={{ padding: '6px 14px', background: '#6af7c2', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13 }}>
             Asignarme
           </button>
         )}
-        {ticket.status !== 'resolved' && (
+        {ticket.status !== 'resolved' && permissions.includes('change_status') && (
           <button onClick={() => handleStatus('resolved')}
             style={{ padding: '6px 14px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13 }}>
             Marcar resuelto
           </button>
         )}
-        {ticket.status !== 'closed' && (
+        {ticket.status !== 'closed' && permissions.includes('change_status') && (
           <button onClick={() => handleStatus('closed')}
             style={{ padding: '6px 14px', background: '#5a5a7a', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13 }}>
             Cerrar ticket
