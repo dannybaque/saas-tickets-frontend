@@ -40,7 +40,7 @@ function App() {
       {!token && showRegister && <Register onRegister={handleLogin} onSwitchToLogin={() => setShowRegister(false)} />}
       {token && (
         <div>
-          <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', gap: 12 }}>
+          <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', gap: 12, overflowX: 'auto', flexWrap: 'nowrap' }}>
             <button
               onClick={() => setView('dashboard')}
               style={{ padding: '6px 16px', background: view === 'dashboard' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
@@ -87,7 +87,7 @@ function App() {
           {view === 'categories' && <Categories token={token} />}
           {view === 'permissions' && <Permissions token={token} />}
           {view === 'dashboard' && <Dashboard token={token} onSelectTicket={(id) => { setSelectedId(id); setView('tickets') }} />}
-            
+
         </div>
       )}
     </div>
