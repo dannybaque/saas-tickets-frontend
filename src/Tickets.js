@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API = process.env.REACT_APP_API
 
-function Tickets({ token, onSelect }) {
+function Tickets({ token, onSelect, permissions }) {
   const [tickets, setTickets]       = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading]       = useState(true)
@@ -75,37 +75,39 @@ function Tickets({ token, onSelect }) {
       <h2>Tickets</h2>
 
       {/* Formulario nuevo ticket */}
-      <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginTop: 20, marginBottom: 30}}>
-        <h4 style={{ marginBottom: 12 }}>Nuevo ticket</h4>
-        <input
-          placeholder="Título"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
-        />
-        <textarea
-          placeholder="Descripción"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80,}}
-        />
-        <select
-          value={categoryId}
-          onChange={e => setCategoryId(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
-        >
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
-          ))}
-        </select>
-        <button
-          onClick={handleCreate}
-          disabled={creating}
-          style={{ padding: '8px 20px', background: '#7c6af7', color: 'white', border: 'none', cursor: 'pointer', fontSize: 14 }}
-        >
-          {creating ? 'Creando...' : 'Crear ticket'}
-        </button>
-      </div>
+      {permissions.includes('create_ticket') &&(
+        <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginTop: 20, marginBottom: 30}}>
+          <h4 style={{ marginBottom: 12 }}>Nuevo ticket</h4>
+          <input
+            placeholder="Título"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
+          />
+          <textarea
+            placeholder="Descripción"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80,}}
+          />
+          <select
+            value={categoryId}
+            onChange={e => setCategoryId(e.target.value)}
+            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
+          >
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleCreate}
+            disabled={creating}
+            style={{ padding: '8px 20px', background: '#7c6af7', color: 'white', border: 'none', cursor: 'pointer', fontSize: 14 }}
+          >
+            {creating ? 'Creando...' : 'Crear ticket'}
+          </button>
+        </div>
+      )}
 
       {/* Lista de tickets */}
       {tickets.length === 0

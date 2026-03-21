@@ -45,28 +45,36 @@ function App() {
               style={{ padding: '6px 16px', background: view === 'tickets' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
               Tickets
             </button>
-            <button
-              onClick={() => { setView('users'); setSelectedId(null) }}
-              style={{ padding: '6px 16px', background: view === 'users' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Usuarios
-            </button>
-            <button
-              onClick={() => { setView('roles'); setSelectedId(null) }}
-              style={{ padding: '6px 16px', background: view === 'roles' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Roles
-            </button>
-            <button
-              onClick={() => { setView('categories'); setSelectedId(null) }}
-              style={{ padding: '6px 16px', background: view === 'categories' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Categorias
-            </button>
-            <button
-              onClick={() => { setView('permissions'); setSelectedId(null) }}
-              style={{ padding: '6px 16px', background: view === 'permissions' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Permisos
-            </button>
+            {userPermissions.includes('manage_users') && 
+              <button
+                onClick={() => { setView('users'); setSelectedId(null) }}
+                style={{ padding: '6px 16px', background: view === 'users' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+                Usuarios
+              </button>
+            }
+            {userPermissions.includes('manage_roles') && 
+              <button
+                onClick={() => { setView('roles'); setSelectedId(null)  } }
+                style={{ padding: '6px 16px', background: view === 'roles' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+                Roles
+              </button>
+            }
+            {userPermissions.includes('manage_categories') && 
+              <button
+                onClick={() => { setView('categories'); setSelectedId(null) }}
+                style={{ padding: '6px 16px', background: view === 'categories' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+                Categorias
+              </button>
+            }
+            {userPermissions.includes('manage_roles') && 
+              <button
+                onClick={() => { setView('permissions'); setSelectedId(null) }}
+                style={{ padding: '6px 16px', background: view === 'permissions' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+                Permisos
+              </button>
+            }
           </div>
-          {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} />}
+          {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} permissions={userPermissions} />}
           {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} permissions={userPermissions} />}
           {view === 'users' && <Users token={token} />}
           {view === 'roles' && <Roles token={token} />}

@@ -140,18 +140,20 @@ const handleAssign = async () => {
           ))
         }
 
-        <div style={{ marginTop: 16 }}>
-          <textarea
-            placeholder="Escribe un comentario..."
-            value={comment}
-            onChange={e => setComment(e.target.value)}
-            style={{ width: '100%', padding: 8, fontSize: 14, height: 80, marginBottom: 8 }}
-          />
-          <button onClick={handleComment} disabled={sending}
-            style={{ padding: '8px 20px', background: '#7c6af7', color: 'white', border: 'none', cursor: 'pointer', fontSize: 14 }}>
-            {sending ? 'Enviando...' : 'Comentar'}
-          </button>
-        </div>
+        {permissions.includes('add_coment') && (
+          <div style={{ marginTop: 16 }}>
+            <textarea
+              placeholder="Escribe un comentario..."
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              style={{ width: '100%', padding: 8, fontSize: 14, height: 80, marginBottom: 8 }}
+            />
+            <button onClick={handleComment} disabled={sending}
+              style={{ padding: '8px 20px', background: '#7c6af7', color: 'white', border: 'none', cursor: 'pointer', fontSize: 14 }}>
+              {sending ? 'Enviando...' : 'Comentar'}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Historial */}
