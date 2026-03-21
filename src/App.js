@@ -7,13 +7,14 @@ import Users from './Users'
 import Roles from './Roles'
 import Categories from './Categories'
 import Permissions from './Permissions'
+import Dashboard from './Dashboard'
 
 
 function App() {
-  const [token, setToken]               = useState(null)
-  const [selectedId, setSelectedId]     = useState(null)
-  const [showRegister, setShowRegister] = useState(false)
-  const [view, setView]                 = useState('tickets')
+  const [token, setToken]                     = useState(null)
+  const [selectedId, setSelectedId]           = useState(null)
+  const [showRegister, setShowRegister]       = useState(false)
+  const [view, setView]                       = useState('dashboard')
   const [userPermissions, setUserPermissions] = useState([])
 
   const handleLogin = async (token) => {
@@ -40,6 +41,11 @@ function App() {
       {token && (
         <div>
           <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', gap: 12 }}>
+            <button
+              onClick={() => setView('dashboard')}
+              style={{ padding: '6px 16px', background: view === 'dashboard' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
+              Inicio
+            </button>
             <button
               onClick={() => setView('tickets')}
               style={{ padding: '6px 16px', background: view === 'tickets' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
@@ -80,6 +86,8 @@ function App() {
           {view === 'roles' && <Roles token={token} />}
           {view === 'categories' && <Categories token={token} />}
           {view === 'permissions' && <Permissions token={token} />}
+          {view === 'dashboard' && <Dashboard token={token} onSelectTicket={(id) => { setSelectedId(id); setView('tickets') }} />}
+            
         </div>
       )}
     </div>
