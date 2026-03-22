@@ -140,7 +140,7 @@ const handleAssign = async () => {
           ))
         }
 
-        {permissions.includes('add_coment') && (
+        {permissions.includes('add_comment') && (
           <div style={{ marginTop: 16 }}>
             <textarea
               placeholder="Escribe un comentario..."
