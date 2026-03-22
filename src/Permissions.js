@@ -13,7 +13,7 @@ const ACTIONS = [
   { key: 'manage_categories',  label: 'Gestionar categorías' },
 ]
 
-function Permissions({ token }) {
+function Permissions({ token, onPermissionChange }) {
   const [permissions, setPermissions] = useState([])
   const [roles, setRoles]             = useState([])
   const [loading, setLoading]         = useState(true)
@@ -53,6 +53,7 @@ function Permissions({ token }) {
         allowed: !current
       }, { headers })
       fetchAll()
+      onPermissionChange()
     } catch (err) {
       console.error(err)
     }

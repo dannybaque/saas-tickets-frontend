@@ -42,6 +42,22 @@ function App() {
     setUserPermissions([])
     setView('dashboard')
   }
+  const refreshPermissions = async () => {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const res = await fetch(`${process.env.REACT_APP_API}/permissions`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const perms = await res.json()
+      const userPerms = perms
+        .filter(p => p.level === payload.level && p.allowed)
+        .map(p => p.action)
+      setUserPermissions(userPerms)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
 
 
   return (
@@ -101,7 +117,7 @@ function App() {
           {view === 'users' && <Users token={token} />}
           {view === 'roles' && <Roles token={token} />}
           {view === 'categories' && <Categories token={token} />}
-          {view === 'permissions' && <Permissions token={token} />}
+          {view === 'permissions' && <Permissions token={token} onPermissionChange={refreshPermissions} />}
           {view === 'dashboard' && <Dashboard token={token} onSelectTicket={(id) => { setSelectedId(id); setView('tickets') }} />}
 
         </div>
