@@ -13,12 +13,21 @@ function Tickets({ token, onSelect, permissions }) {
   const [description, setDescription] = useState('')
   const [categoryId, setCategoryId]   = useState('')
   const [creating, setCreating]       = useState(false)
+  const [search, setSearch]       = useState('')
+  const [filterStatus, setFilterStatus] = useState('')
+  const [filterPriority, setFilterPriority] = useState('')
+
 
   const headers = { Authorization: `Bearer ${token}` }
 
   const fetchTickets = async () => {
     try {
-      const res = await axios.get(`${API}/tickets`, { headers })
+      const params = {}
+      if (search) params.search = search
+      if (filterStatus) params.status = filterStatus
+      if (filterPriority) params.priority = filterPriority
+
+      const res = await axios.get(`${API}/tickets`, { headers, params })
       setTickets(res.data.data)
     } catch (err) {
       console.error(err)
@@ -26,6 +35,7 @@ function Tickets({ token, onSelect, permissions }) {
       setLoading(false)
     }
   }
+
 
   const fetchCategories = async () => {
     try {
@@ -110,6 +120,41 @@ function Tickets({ token, onSelect, permissions }) {
           </button>
         </div>
       )}
+
+            {/* Búsqueda y filtros */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+        <input
+          placeholder='Buscar por título...'
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}
+        />
+        <select
+          value={filterStatus}
+          onChange={e => setFilterStatus(e.target.value)}
+          style={{ padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
+          <option value=''>Todos los estados</option>
+          <option value='open'>Abierto</option>
+          <option value='in_progress'>En progreso</option>
+          <option value='resolved'>Resuelto</option>
+          <option value='closed'>Cerrado</option>
+        </select>
+        <select
+          value={filterPriority}
+          onChange={e => setFilterPriority(e.target.value)}
+          style={{ padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
+          <option value=''>Todas las prioridades</option>
+          <option value='low'>Baja</option>
+          <option value='medium'>Media</option>
+          <option value='high'>Alta</option>
+        </select>
+        <button
+          onClick={fetchTickets}
+          style={{ padding: '8px 16px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }}>
+          Buscar
+        </button>
+      </div>
+
 
       {/* Lista de tickets */}
       {tickets.length === 0
