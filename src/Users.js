@@ -17,19 +17,24 @@ function Users({ token }) {
   const [editRoleId, setEditRoleId] = useState('')
   const [editActive, setEditActive] = useState(true)
   const [saving, setSaving]         = useState(false)
+  const [search, setSearch] = useState('')
+
 
   const headers = { Authorization: `Bearer ${token}` }
 
   const fetchUsers = async () => {
-    try {
-      const res = await axios.get(`${API}/users`, { headers })
-      setUsers(res.data)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
+      try {
+        const params = {}
+        if (search) params.search = search
+        const res = await axios.get(`${API}/users`, { headers, params })
+        setUsers(res.data)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+
 
   const fetchRoles = async () => {
     try {
@@ -140,6 +145,22 @@ function Users({ token }) {
           {creating ? 'Creando...' : 'Crear Usuario'}
         </button>
       </div>
+
+            {/* Búsqueda */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <input
+          placeholder='Buscar por nombre o email...'
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}
+        />
+        <button
+          onClick={fetchUsers}
+          style={{ padding: '8px 16px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }}>
+          Buscar
+        </button>
+      </div>
+
 
       {/* Lista de usuarios */}
       <h4 style={{ marginBottom: 12 }}>Usuarios</h4>
