@@ -60,7 +60,14 @@ function Tickets({ token, onSelect, permissions }) {
 
 
   const handleCreate = async () => {
-    if (!title || !categoryId) return
+    if (!title) {
+      alert('El título es obligatorio')
+      return
+    }
+    if (!categoryId) {
+      alert('Debes seleccionar una categoría')
+      return
+    }
     setCreating(true)
     try {
       await axios.post(`${API}/tickets`, {

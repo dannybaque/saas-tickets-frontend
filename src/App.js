@@ -17,6 +17,9 @@ function App() {
   const [view, setView]                       = useState('dashboard')
   const [userPermissions, setUserPermissions] = useState([])
 
+
+
+
   const handleLogin = async (token) => {
   setToken(token)
     try {
@@ -33,6 +36,13 @@ function App() {
       console.error(err)
     }
   }
+
+  const handleLogout = () => {
+    setToken(null)
+    setUserPermissions([])
+    setView('dashboard')
+  }
+
 
   return (
     <div>
@@ -79,6 +89,12 @@ function App() {
                 Permisos
               </button>
             }
+            <button
+              onClick={handleLogout}
+              style={{ padding: '6px 16px', background: 'transparent', color: '#f76a8a', border: '1px solid #f76a8a', borderRadius: 4, cursor: 'pointer', marginLeft: 'auto' }}>
+              Cerrar sesión
+            </button>
+
           </div>
           {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} permissions={userPermissions} />}
           {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} permissions={userPermissions} />}
