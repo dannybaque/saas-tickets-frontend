@@ -16,25 +16,30 @@ function Tickets({ token, onSelect, permissions }) {
   const [search, setSearch]       = useState('')
   const [filterStatus, setFilterStatus] = useState('')
   const [filterPriority, setFilterPriority] = useState('')
+  const [page, setPage]           = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
 
 
   const headers = { Authorization: `Bearer ${token}` }
 
   const fetchTickets = async () => {
     try {
-      const params = {}
+      const params = { page, limit: 10 }
       if (search) params.search = search
       if (filterStatus) params.status = filterStatus
       if (filterPriority) params.priority = filterPriority
 
       const res = await axios.get(`${API}/tickets`, { headers, params })
       setTickets(res.data.data)
+      setTotalPages(res.data.totalPages)
     } catch (err) {
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
+
 
 
   const fetchCategories = async () => {
@@ -51,7 +56,8 @@ function Tickets({ token, onSelect, permissions }) {
     fetchTickets()
     fetchCategories()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [page])
+
 
   const handleCreate = async () => {
     if (!title || !categoryId) return
@@ -180,6 +186,26 @@ function Tickets({ token, onSelect, permissions }) {
           </div>
         ))
       }
+            {/* Paginación */}
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 20 }}>
+          <button
+            onClick={() => setPage(p => p - 1)}
+            disabled={page === 1}
+            style={{ padding: '6px 16px', background: page === 1 ? '#f5f5f5' : '#7c6af7', color: page === 1 ? '#999' : 'white', border: 'none', borderRadius: 4, cursor: page === 1 ? 'default' : 'pointer', fontSize: 14 }}>
+            Anterior
+          </button>
+          <span style={{ padding: '6px 12px', fontSize: 14, color: '#666' }}>
+            {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => p + 1)}
+            disabled={page === totalPages}
+            style={{ padding: '6px 16px', background: page === totalPages ? '#f5f5f5' : '#7c6af7', color: page === totalPages ? '#999' : 'white', border: 'none', borderRadius: 4, cursor: page === totalPages ? 'default' : 'pointer', fontSize: 14 }}>
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   )
 }
