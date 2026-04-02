@@ -1,10 +1,11 @@
+import { useTheme } from './ThemeContext'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const API = process.env.REACT_APP_API
 
 function Tickets({ token, onSelect, permissions }) {
-
+  const { theme } = useTheme()
   const [tickets, setTickets]       = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading]       = useState(true)
@@ -94,31 +95,30 @@ function Tickets({ token, onSelect, permissions }) {
 
   if (loading) return <p style={{ padding: 40 }}>Cargando tickets...</p>
 
-  return (
-    <div style={{ maxWidth: 800, margin: '20px auto', fontFamily: 'sans-serif', padding: '0 16px' }}>
-      <h2>Tickets</h2>
+return (
+    <div style={{ maxWidth: 800, margin: '20px auto', fontFamily: 'sans-serif', padding: '0 16px', color: theme.text, background: theme.bg, minHeight: '100vh' }}>
+      <h2 style={{ color: theme.text, marginBottom: 20 }}>Tickets</h2>
 
       {/* Formulario nuevo ticket */}
-      {permissions.includes('create_ticket') &&(
-        <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginTop: 20, marginBottom: 30}}>
-          <h4 style={{ marginBottom: 12 }}>Nuevo ticket</h4>
+      {permissions.includes('create_ticket') && (
+        <div style={{ background: theme.bgSecondary, border: `1px solid ${theme.border}`, padding: 20, borderRadius: 10, marginBottom: 24 }}>
+          <h4 style={{ marginBottom: 12, color: theme.text }}>Nuevo ticket</h4>
           <input
             placeholder="Título"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
+            style={{ width: '100%', padding: '10px 12px', marginBottom: 8, fontSize: 14, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText, boxSizing: 'border-box' }}
           />
           <textarea
             placeholder="Descripción"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, height: 80,}}
+            style={{ width: '100%', padding: '10px 12px', marginBottom: 8, fontSize: 14, height: 80, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText, boxSizing: 'border-box', resize: 'vertical' }}
           />
           <select
             value={categoryId}
             onChange={e => setCategoryId(e.target.value)}
-            style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14}}
-          >
+            style={{ width: '100%', padding: '10px 12px', marginBottom: 12, fontSize: 14, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText, boxSizing: 'border-box' }}>
             {categories.map(cat => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
             ))}
@@ -126,25 +126,24 @@ function Tickets({ token, onSelect, permissions }) {
           <button
             onClick={handleCreate}
             disabled={creating}
-            style={{ padding: '8px 20px', background: '#7c6af7', color: 'white', border: 'none', cursor: 'pointer', fontSize: 14 }}
-          >
+            style={{ width: '100%',padding: '10px 12px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
             {creating ? 'Creando...' : 'Crear ticket'}
           </button>
         </div>
       )}
 
-            {/* Búsqueda y filtros */}
-      <div style={{ flex: 1, minWidth: '200px', padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
+      {/* Búsqueda y filtros */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
         <input
           placeholder='Buscar por título...'
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ flex: 1, padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}
+          style={{ flex: 1, minWidth: '200px', padding: '10px 12px', fontSize: 14, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText, boxSizing: 'border-box' }}
         />
         <select
           value={filterStatus}
           onChange={e => setFilterStatus(e.target.value)}
-          style={{ padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
+          style={{ padding: '10px 12px', fontSize: 14, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText }}>
           <option value=''>Todos los estados</option>
           <option value='open'>Abierto</option>
           <option value='in_progress'>En progreso</option>
@@ -154,7 +153,7 @@ function Tickets({ token, onSelect, permissions }) {
         <select
           value={filterPriority}
           onChange={e => setFilterPriority(e.target.value)}
-          style={{ padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
+          style={{ padding: '10px 12px', fontSize: 14, background: theme.input, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, color: theme.inputText }}>
           <option value=''>Todas las prioridades</option>
           <option value='low'>Baja</option>
           <option value='medium'>Media</option>
@@ -162,58 +161,56 @@ function Tickets({ token, onSelect, permissions }) {
         </select>
         <button
           onClick={fetchTickets}
-          style={{ padding: '8px 16px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }}>
+          style={{ width: '100%',padding: '10px 12px', background: '#7c6af7', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
           Buscar
         </button>
       </div>
 
-
       {/* Lista de tickets */}
       {tickets.length === 0
-        ? <p>No hay tickets aún.</p>
+        ? <p style={{ color: theme.textMuted }}>No hay tickets aún.</p>
         : tickets.map(ticket => (
           <div key={ticket.id}
             onClick={() => onSelect(ticket.id)}
-            style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 12, cursor: 'pointer' }}>
+            style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}`, borderRadius: 8, padding: 16, marginBottom: 10, cursor: 'pointer', transition: 'opacity 0.15s' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <strong>{ticket.title}</strong>
-              <span style={{
-                background: statusColor[ticket.status],
-                padding: '2px 10px', borderRadius: 20,
-                fontSize: 12, color: '#000'
-              }}>
+              <strong style={{ color: theme.text }}>{ticket.title}</strong>
+              <span style={{ background: statusColor[ticket.status], padding: '2px 10px', borderRadius: 20, fontSize: 12, color: '#000', flexShrink: 0, marginLeft: 8 }}>
                 {ticket.status}
               </span>
             </div>
-            <p style={{ color: '#666', fontSize: 13, marginTop: 6 }}>{ticket.description}</p>
-            <p style={{ color: '#999', fontSize: 11, marginTop: 4 }}>
+            <p style={{ color: theme.textMuted, fontSize: 13, marginTop: 6 }}>{ticket.description}</p>
+            <p style={{ color: theme.textMuted, fontSize: 11, marginTop: 4 }}>
               Prioridad: {ticket.priority} · Creado: {new Date(ticket.created_at).toLocaleDateString()}
             </p>
           </div>
         ))
       }
-            {/* Paginación */}
+
+      {/* Paginación */}
       {totalPages > 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 20 }}>
           <button
             onClick={() => setPage(p => p - 1)}
             disabled={page === 1}
-            style={{ padding: '6px 16px', background: page === 1 ? '#f5f5f5' : '#7c6af7', color: page === 1 ? '#999' : 'white', border: 'none', borderRadius: 4, cursor: page === 1 ? 'default' : 'pointer', fontSize: 14 }}>
+            style={{ padding: '6px 16px', background: page === 1 ? theme.bgSecondary : '#7c6af7', color: page === 1 ? theme.textMuted : 'white', border: `1px solid ${theme.border}`, borderRadius: 6, cursor: page === 1 ? 'default' : 'pointer', fontSize: 14 }}>
             Anterior
           </button>
-          <span style={{ padding: '6px 12px', fontSize: 14, color: '#666' }}>
+          <span style={{ padding: '6px 12px', fontSize: 14, color: theme.textMuted }}>
             {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={page === totalPages}
-            style={{ padding: '6px 16px', background: page === totalPages ? '#f5f5f5' : '#7c6af7', color: page === totalPages ? '#999' : 'white', border: 'none', borderRadius: 4, cursor: page === totalPages ? 'default' : 'pointer', fontSize: 14 }}>
+            style={{ padding: '6px 16px', background: page === totalPages ? theme.bgSecondary : '#7c6af7', color: page === totalPages ? theme.textMuted : 'white', border: `1px solid ${theme.border}`, borderRadius: 6, cursor: page === totalPages ? 'default' : 'pointer', fontSize: 14 }}>
             Siguiente
           </button>
         </div>
       )}
     </div>
   )
+
+
 }
 
 export default Tickets

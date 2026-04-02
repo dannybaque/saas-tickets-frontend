@@ -1,3 +1,4 @@
+import { useTheme } from './ThemeContext'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
@@ -14,6 +15,7 @@ const ACTIONS = [
 ]
 
 function Permissions({ token, onPermissionChange }) {
+  const { theme } = useTheme()
   const [permissions, setPermissions] = useState([])
   const [roles, setRoles]             = useState([])
   const [loading, setLoading]         = useState(true)
@@ -62,46 +64,47 @@ function Permissions({ token, onPermissionChange }) {
   if (loading) return <p style={{ padding: 40 }}>Cargando permisos...</p>
 
   return (
-    <div style={{ maxWidth: 900, margin: '40px auto', fontFamily: 'sans-serif', padding: '0 20px' }}>
-      <h2>Gestión de Permisos</h2>
-      <p style={{ color: '#666', fontSize: 13, marginTop: 4, marginBottom: 24 }}>
+    <div style={{ maxWidth: 900, margin: '20px auto', fontFamily: 'sans-serif', padding: '0 16px', color: theme.text }}>
+      <h2 style={{ color: theme.text, marginBottom: 4 }}>Gestión de Permisos</h2>
+      <p style={{ color: theme.textMuted, fontSize: 13, marginBottom: 24 }}>
         Configura qué puede hacer cada nivel jerárquico.
       </p>
 
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', background: theme.cardBg, border: `1px solid ${theme.cardBorder}`, borderRadius: 10 }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ background: '#12121a', color: 'white' }}>
-              <th style={{ padding: '10px 16px', textAlign: 'left' }}>Acción</th>
+            <tr style={{ background: theme.nav }}>
+              <th style={{ padding: '12px 16px', textAlign: 'left', color: 'white', fontWeight: 600 }}>Acción</th>
               {roles.map(role => (
-                <th key={role.id} style={{ padding: '10px 16px', textAlign: 'center' }}>
+                <th key={role.id} style={{ padding: '12px 16px', textAlign: 'center', color: 'white', fontWeight: 600 }}>
                   {role.name}<br/>
-                  <span style={{ fontSize: 10, color: '#999' }}>Nivel {role.level}</span>
+                  <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>Nivel {role.level}</span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {ACTIONS.map(action => (
-              <tr key={action.key} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '10px 16px', fontWeight: 500 }}>{action.label}</td>
+            {ACTIONS.map((action, i) => (
+              <tr key={action.key} style={{ borderBottom: `1px solid ${theme.border}`, background: i % 2 === 0 ? theme.cardBg : theme.bgSecondary }}>
+                <td style={{ padding: '12px 16px', fontWeight: 500, color: theme.text }}>{action.label}</td>
                 {roles.map(role => {
                   const allowed = isAllowed(role.level, action.key)
                   return (
-                    <td key={role.id} style={{ padding: '10px 16px', textAlign: 'center' }}>
+                    <td key={role.id} style={{ padding: '12px 16px', textAlign: 'center' }}>
                       <button
                         onClick={() => handleToggle(role.level, action.key, allowed)}
                         style={{
-                          width: 36, height: 20, borderRadius: 10,
-                          background: allowed ? '#7c6af7' : '#ddd',
+                          width: 40, height: 22, borderRadius: 11,
+                          background: allowed ? '#7c6af7' : theme.border,
                           border: 'none', cursor: 'pointer',
                           position: 'relative', transition: 'background 0.2s'
                         }}>
                         <span style={{
-                          position: 'absolute', top: 2,
-                          left: allowed ? 18 : 2,
+                          position: 'absolute', top: 3,
+                          left: allowed ? 20 : 3,
                           width: 16, height: 16, borderRadius: '50%',
-                          background: 'white', transition: 'left 0.2s'
+                          background: 'white', transition: 'left 0.2s',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
                         }} />
                       </button>
                     </td>
@@ -114,6 +117,7 @@ function Permissions({ token, onPermissionChange }) {
       </div>
     </div>
   )
+
 }
 
 export default Permissions
