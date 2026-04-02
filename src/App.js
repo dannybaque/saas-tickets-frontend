@@ -10,6 +10,7 @@ import Roles from './Roles'
 import Categories from './Categories'
 import Permissions from './Permissions'
 import Dashboard from './Dashboard'
+import Reports from './Reports'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   const [showRegister, setShowRegister]       = useState(false)
   const [view, setView]                       = useState('dashboard')
   const [userPermissions, setUserPermissions] = useState([])
+
 
 
 
@@ -87,6 +89,7 @@ function App() {
               {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'roles' ? 'active' : ''}`} onClick={() => { setView('roles'); setSelectedId(null) }}>Roles</button>}
               {userPermissions.includes('manage_categories') && <button className={`nav-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null) }}>Categorías</button>}
               {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null) }}>Permisos</button>}
+              {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'reports' ? 'active' : ''}`} onClick={() => { setView('reports'); setSelectedId(null) }}>Reportes</button>}
               <button className="nav-btn danger" onClick={handleLogout}>Cerrar sesión</button>
               <button
                 className="nav-btn"
@@ -105,6 +108,7 @@ function App() {
             {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'roles' ? 'active' : ''}`} onClick={() => { setView('roles'); setSelectedId(null); setMenuOpen(false) }}>Roles</button>}
             {userPermissions.includes('manage_categories') && <button className={`mobile-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null); setMenuOpen(false) }}>Categorías</button>}
             {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null); setMenuOpen(false) }}>Permisos</button>}
+            {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'reports' ? 'active' : ''}`} onClick={() => { setView('reports'); setSelectedId(null); setMenuOpen(false) }}>Reportes</button>}
             <button className="mobile-btn danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>Cerrar sesión</button>
             <button className="mobile-btn" onClick={() => { toggleTheme(); setMenuOpen(false) }}>
               {mode === 'light' ? '🌙 Modo oscuro' : '☀️ Modo claro'}
@@ -118,6 +122,7 @@ function App() {
           {view === 'categories' && <Categories token={token} />}
           {view === 'permissions' && <Permissions token={token} onPermissionChange={refreshPermissions} />}
           {view === 'dashboard' && <Dashboard token={token} onSelectTicket={(id) => { setSelectedId(id); setView('tickets') }} />}
+          {view === 'reports' && <Reports token={token} />}
 
         </div>
       )}
