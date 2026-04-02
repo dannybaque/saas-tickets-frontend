@@ -10,6 +10,9 @@ function TicketDetail({ token, ticketId, onBack, permissions }) {
   const [loading, setLoading] = useState(true)
   const [comment, setComment] = useState('')
   const [sending, setSending] = useState(false)
+  const [attachments, setAttachments]   = useState([])
+  const [uploading, setUploading]       = useState(false)
+
 
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -26,8 +29,10 @@ function TicketDetail({ token, ticketId, onBack, permissions }) {
 
   useEffect(() => {
     fetchTicket()
+    fetchAttachments()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId])
+
 
   const handleComment = async () => {
     if (!comment) return
@@ -71,6 +76,43 @@ const handleAssign = async () => {
       }
     }
   }
+
+  const fetchAttachments = async () => {
+    try {
+      const res = await axios.get(`${API}/tickets/${ticketId}/attachments`, { headers })
+      setAttachments(res.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+    const handleUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      await axios.post(`${API}/tickets/${ticketId}/attachments`, formData, {
+        headers: { ...headers, 'Content-Type': 'multipart/form-data' }
+      })
+      fetchAttachments()
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleDeleteAttachment = async (attachmentId) => {
+    try {
+      await axios.delete(`${API}/tickets/${ticketId}/attachments/${attachmentId}`, { headers })
+      fetchAttachments()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+
 
 
   const statusColor = {
@@ -174,6 +216,47 @@ return (
           </div>
         )}
       </div>
+
+      {/* Adjuntos */}
+      <div style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}`, borderRadius: 12, padding: 24, marginBottom: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+        <h4 style={{ color: theme.text, marginBottom: 16, fontSize: 15, fontWeight: 700 }}>📎 Adjuntos</h4>
+
+        {attachments.length === 0
+          ? <p style={{ color: theme.textMuted, fontSize: 13 }}>Sin adjuntos aún.</p>
+          : attachments.map(att => (
+            <div key={att.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${theme.border}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 20 }}>
+                  {att.mimetype?.includes('image') ? '🖼️' : att.mimetype?.includes('pdf') ? '📄' : '📁'}
+                </span>
+                <div>
+                  <a href={att.url} target='_blank' rel='noreferrer'
+                    style={{ color: '#7c6af7', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+                    {att.filename}
+                  </a>
+                  <p style={{ fontSize: 11, color: theme.textMuted, marginTop: 2 }}>
+                    {(att.size / 1024).toFixed(1)} KB
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => handleDeleteAttachment(att.id)}
+                style={{ background: 'transparent', border: 'none', color: '#f76a8a', cursor: 'pointer', fontSize: 18 }}>
+                ✕
+              </button>
+            </div>
+          ))
+        }
+
+        <div style={{ marginTop: 16 }}>
+          <label style={{ display: 'inline-block', padding: '8px 16px', background: theme.bgSecondary, border: `1px solid ${theme.border}`, borderRadius: 6, cursor: 'pointer', fontSize: 13, color: theme.text, fontWeight: 500 }}>
+            {uploading ? 'Subiendo...' : '+ Agregar archivo'}
+            <input type='file' onChange={handleUpload} style={{ display: 'none' }} disabled={uploading}
+              accept='.jpg,.jpeg,.png,.gif,.pdf,.txt' />
+          </label>
+          <span style={{ fontSize: 12, color: theme.textMuted, marginLeft: 10 }}>Máx. 5MB · jpg, png, pdf, txt</span>
+        </div>
+      </div>
+
 
       {/* Historial */}
       <div style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}`, borderRadius: 12, padding: 24, marginBottom: 32, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
