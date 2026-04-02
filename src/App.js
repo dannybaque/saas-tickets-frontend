@@ -1,3 +1,4 @@
+import { useTheme } from './ThemeContext'
 import { useState } from 'react'
 import './App.css'
 import Login from './Login'
@@ -12,6 +13,7 @@ import Dashboard from './Dashboard'
 
 
 function App() {
+  const { theme, mode, toggleTheme }          = useTheme()
   const [menuOpen, setMenuOpen]               = useState(false)
   const [token, setToken]                     = useState(null)
   const [selectedId, setSelectedId]           = useState(null)
@@ -63,7 +65,7 @@ function App() {
 
 
   return (
-    <div>
+<div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, transition: 'background 0.3s, color 0.3s' }}>
       {!token && !showRegister && <Login onLogin={handleLogin} onSwitchToRegister={() => setShowRegister(true)} />}
       {!token && showRegister && <Register onRegister={handleLogin} onSwitchToLogin={() => setShowRegister(false)} />}
       {token && (
@@ -86,6 +88,12 @@ function App() {
               {userPermissions.includes('manage_categories') && <button className={`nav-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null) }}>Categorías</button>}
               {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null) }}>Permisos</button>}
               <button className="nav-btn danger" onClick={handleLogout}>Cerrar sesión</button>
+              <button
+                className="nav-btn"
+                onClick={toggleTheme}
+                style={{ fontSize: 18, padding: '4px 10px' }}>
+                {mode === 'light' ? '🌙' : '☀️'}
+              </button>
             </div>
           </div>
 
@@ -98,6 +106,9 @@ function App() {
             {userPermissions.includes('manage_categories') && <button className={`mobile-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null); setMenuOpen(false) }}>Categorías</button>}
             {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null); setMenuOpen(false) }}>Permisos</button>}
             <button className="mobile-btn danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>Cerrar sesión</button>
+            <button className="mobile-btn" onClick={() => { toggleTheme(); setMenuOpen(false) }}>
+              {mode === 'light' ? '🌙 Modo oscuro' : '☀️ Modo claro'}
+            </button>
           </div>
 
           {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} permissions={userPermissions} />}
