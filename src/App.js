@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css'
 import Login from './Login'
 import Register from './Register'
 import Tickets from './Tickets'
@@ -11,6 +12,7 @@ import Dashboard from './Dashboard'
 
 
 function App() {
+  const [menuOpen, setMenuOpen]               = useState(false)
   const [token, setToken]                     = useState(null)
   const [selectedId, setSelectedId]           = useState(null)
   const [showRegister, setShowRegister]       = useState(false)
@@ -66,52 +68,38 @@ function App() {
       {!token && showRegister && <Register onRegister={handleLogin} onSwitchToLogin={() => setShowRegister(false)} />}
       {token && (
         <div>
-          <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', gap: 12, overflowX: 'auto', flexWrap: 'nowrap' }}>
-            <button
-              onClick={() => setView('dashboard')}
-              style={{ padding: '6px 16px', background: view === 'dashboard' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Inicio
-            </button>
-            <button
-              onClick={() => setView('tickets')}
-              style={{ padding: '6px 16px', background: view === 'tickets' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-              Tickets
-            </button>
-            {userPermissions.includes('manage_users') && 
-              <button
-                onClick={() => { setView('users'); setSelectedId(null) }}
-                style={{ padding: '6px 16px', background: view === 'users' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-                Usuarios
-              </button>
-            }
-            {userPermissions.includes('manage_roles') && 
-              <button
-                onClick={() => { setView('roles'); setSelectedId(null)  } }
-                style={{ padding: '6px 16px', background: view === 'roles' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-                Roles
-              </button>
-            }
-            {userPermissions.includes('manage_categories') && 
-              <button
-                onClick={() => { setView('categories'); setSelectedId(null) }}
-                style={{ padding: '6px 16px', background: view === 'categories' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-                Categorias
-              </button>
-            }
-            {userPermissions.includes('manage_roles') && 
-              <button
-                onClick={() => { setView('permissions'); setSelectedId(null) }}
-                style={{ padding: '6px 16px', background: view === 'permissions' ? '#7c6af7' : 'transparent', color: 'white', border: '1px solid #7c6af7', borderRadius: 4, cursor: 'pointer' }}>
-                Permisos
-              </button>
-            }
-            <button
-              onClick={handleLogout}
-              style={{ padding: '6px 16px', background: 'transparent', color: '#f76a8a', border: '1px solid #f76a8a', borderRadius: 4, cursor: 'pointer', marginLeft: 'auto' }}>
-              Cerrar sesión
+          <div style={{ background: '#12121a', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ color: 'white', fontWeight: 800, fontSize: 18, letterSpacing: '-0.5px' }}>Dysior</span>
+
+            {/* Botón hamburguesa */}
+            <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}
+              style={{ background: 'none', border: 'none', color: 'white', fontSize: 22, cursor: 'pointer', lineHeight: 1 }}>
+              {menuOpen ? '✕' : '☰'}
             </button>
 
+            {/* Menú desktop */}
+            <div className="menu-desktop">
+              <button className={`nav-btn ${view === 'dashboard' ? 'active' : ''}`} onClick={() => setView('dashboard')}>Inicio</button>
+              <button className={`nav-btn ${view === 'tickets' ? 'active' : ''}`} onClick={() => setView('tickets')}>Tickets</button>
+              {userPermissions.includes('manage_users') && <button className={`nav-btn ${view === 'users' ? 'active' : ''}`} onClick={() => { setView('users'); setSelectedId(null) }}>Usuarios</button>}
+              {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'roles' ? 'active' : ''}`} onClick={() => { setView('roles'); setSelectedId(null) }}>Roles</button>}
+              {userPermissions.includes('manage_categories') && <button className={`nav-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null) }}>Categorías</button>}
+              {userPermissions.includes('manage_roles') && <button className={`nav-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null) }}>Permisos</button>}
+              <button className="nav-btn danger" onClick={handleLogout}>Cerrar sesión</button>
+            </div>
           </div>
+
+          {/* Menú móvil */}
+          <div className={`menu-mobile ${menuOpen ? 'open' : ''}`}>
+            <button className={`mobile-btn ${view === 'dashboard' ? 'active' : ''}`} onClick={() => { setView('dashboard'); setMenuOpen(false) }}>Inicio</button>
+            <button className={`mobile-btn ${view === 'tickets' ? 'active' : ''}`} onClick={() => { setView('tickets'); setMenuOpen(false) }}>Tickets</button>
+            {userPermissions.includes('manage_users') && <button className={`mobile-btn ${view === 'users' ? 'active' : ''}`} onClick={() => { setView('users'); setSelectedId(null); setMenuOpen(false) }}>Usuarios</button>}
+            {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'roles' ? 'active' : ''}`} onClick={() => { setView('roles'); setSelectedId(null); setMenuOpen(false) }}>Roles</button>}
+            {userPermissions.includes('manage_categories') && <button className={`mobile-btn ${view === 'categories' ? 'active' : ''}`} onClick={() => { setView('categories'); setSelectedId(null); setMenuOpen(false) }}>Categorías</button>}
+            {userPermissions.includes('manage_roles') && <button className={`mobile-btn ${view === 'permissions' ? 'active' : ''}`} onClick={() => { setView('permissions'); setSelectedId(null); setMenuOpen(false) }}>Permisos</button>}
+            <button className="mobile-btn danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>Cerrar sesión</button>
+          </div>
+
           {view === 'tickets' && !selectedId && <Tickets token={token} onSelect={setSelectedId} permissions={userPermissions} />}
           {view === 'tickets' && selectedId && <TicketDetail token={token} ticketId={selectedId} onBack={() => setSelectedId(null)} permissions={userPermissions} />}
           {view === 'users' && <Users token={token} />}

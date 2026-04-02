@@ -4,7 +4,6 @@ import axios from 'axios'
 const API = process.env.REACT_APP_API
 
 function Tickets({ token, onSelect, permissions }) {
-  console.log('Permisos en Tickets:', permissions)
 
   const [tickets, setTickets]       = useState([])
   const [categories, setCategories] = useState([])
