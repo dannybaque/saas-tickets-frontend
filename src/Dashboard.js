@@ -32,7 +32,7 @@ function Dashboard({ token, onSelectTicket }) {
       <h2>Dashboard</h2>
 
       {/* Métricas */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 24, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginTop: 24, marginBottom: 32 }}>
         <div style={{ background: '#f5f5f5', borderRadius: 8, padding: 20, textAlign: 'center' }}>
           <p style={{ fontSize: 36, fontWeight: 800, color: '#6af7c2', margin: 0 }}>{data.open}</p>
           <p style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Tickets abiertos</p>

@@ -95,7 +95,7 @@ function Tickets({ token, onSelect, permissions }) {
   if (loading) return <p style={{ padding: 40 }}>Cargando tickets...</p>
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'sans-serif', padding: '0 20px' }}>
+    <div style={{ maxWidth: 800, margin: '20px auto', fontFamily: 'sans-serif', padding: '0 16px' }}>
       <h2>Tickets</h2>
 
       {/* Formulario nuevo ticket */}
@@ -134,7 +134,7 @@ function Tickets({ token, onSelect, permissions }) {
       )}
 
             {/* Búsqueda y filtros */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+      <div style={{ flex: 1, minWidth: '200px', padding: 8, fontSize: 14, border: '1px solid #ddd', borderRadius: 4 }}>
         <input
           placeholder='Buscar por título...'
           value={search}

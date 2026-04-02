@@ -114,25 +114,25 @@ function Users({ token }) {
           placeholder='Nombre'
           value={name}
           onChange={e => setName(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, boxSizing: 'border-box' }}
         />
         <input
           placeholder='Email'
           value={email}
           onChange={e => setEmail(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, boxSizing: 'border-box' }}
         />
         <input
           type='password'
           placeholder='Contraseña'
           value={password}
           onChange={e => setPassword(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, boxSizing: 'border-box' }}
         />
         <select
           value={roleId}
           onChange={e => setRoleId(e.target.value)}
-          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14 }}>
+          style={{ width: '100%', padding: 8, marginBottom: 8, fontSize: 14, boxSizing: 'border-box' }}>
           <option value=''>Sin rol asignado</option>
           {roles.map(role => (
             <option key={role.id} value={role.id}>{role.name} — Nivel {role.level}</option>
@@ -186,7 +186,7 @@ function Users({ token }) {
 
       {/* Panel de detalle */}
       {selected && (
-        <div style={{ position: 'fixed', top: 0, right: 0, width: 340, height: '100%', background: 'white', boxShadow: '-4px 0 20px rgba(0,0,0,0.1)', padding: 24, overflowY: 'auto', zIndex: 100 }}>
+        <div style={{ position: 'fixed', top: 0, right: 0, width: 'min(340px, 100vw)', height: '100%', background: 'white', boxShadow: '-4px 0 20px rgba(0,0,0,0.1)', padding: 24, overflowY: 'auto', zIndex: 100 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
             <h3 style={{ margin: 0 }}>Detalle de usuario</h3>
             <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}>✕</button>

@@ -85,7 +85,7 @@ const handleAssign = async () => {
 
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'sans-serif', padding: '0 20px' }}>
+    <div style={{ maxWidth: 800, margin: '20px auto', fontFamily: 'sans-serif', padding: '0 16px' }}>
 
       {/* Header */}
       <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7c6af7', fontSize: 14, marginBottom: 20 }}>
