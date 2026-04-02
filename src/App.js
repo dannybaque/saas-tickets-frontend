@@ -1,5 +1,5 @@
 import { useTheme } from './ThemeContext'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import './App.css'
 import Login from './Login'
 import Register from './Register'
@@ -11,6 +11,10 @@ import Categories from './Categories'
 import Permissions from './Permissions'
 import Dashboard from './Dashboard'
 import Reports from './Reports'
+import axios from 'axios'
+
+
+
 
 
 function App() {
@@ -21,6 +25,9 @@ function App() {
   const [showRegister, setShowRegister]       = useState(false)
   const [view, setView]                       = useState('dashboard')
   const [userPermissions, setUserPermissions] = useState([])
+  const [trialExpired, setTrialExpired] = useState(false)
+
+  
 
 
 
@@ -65,9 +72,37 @@ function App() {
   }
 
 
+  useEffect(() => {
+  const interceptor = axios.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response?.status === 402) {
+        setTrialExpired(true)
+      }
+      return Promise.reject(error)
+    }
+  )
+  return () => axios.interceptors.response.eject(interceptor)
+}, [])
+
 
   return (
+    
 <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, transition: 'background 0.3s, color 0.3s' }}>
+            {trialExpired && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div style={{ background: 'white', borderRadius: 16, padding: 40, maxWidth: 400, textAlign: 'center' }}>
+            <p style={{ fontSize: 48, marginBottom: 16 }}>⏰</p>
+            <h2 style={{ marginBottom: 12 }}>Tu período de prueba terminó</h2>
+            <p style={{ color: '#666', marginBottom: 24, fontSize: 15 }}>Contáctanos para activar tu plan y seguir usando Dysior.</p>
+            <a href='mailto:hola@dysior.com'
+              style={{ display: 'block', padding: '12px 24px', background: '#7c6af7', color: 'white', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 15 }}>
+              Contactar a hola@dysior.com
+            </a>
+          </div>
+        </div>
+      )}
+
       {!token && !showRegister && <Login onLogin={handleLogin} onSwitchToRegister={() => setShowRegister(true)} />}
       {!token && showRegister && <Register onRegister={handleLogin} onSwitchToLogin={() => setShowRegister(false)} />}
       {token && (
